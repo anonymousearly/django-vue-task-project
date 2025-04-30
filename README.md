@@ -43,7 +43,7 @@ A full-stack blog application with a Django REST API backend and Vue.js frontend
 3. Install backend dependencies:
 
    ```bash
-   pip install django djangorestframework django-cors-headers whitenoise django-filter
+   pip install -r requirements.txt
    ```
 
 4. Apply database migrations:
@@ -139,6 +139,60 @@ A full-stack blog application with a Django REST API backend and Vue.js frontend
 ## Admin Interface
 
 Access the Django admin interface at `http://localhost:8000/admin/` using your superuser credentials.
+
+## Deployment
+
+### Backend Deployment to Render
+
+1. Push your code to a GitHub repository.
+
+2. Log into [Render](https://render.com) and create a new Web Service.
+
+3. Connect your GitHub repository.
+
+4. Configure your new Web Service with the following settings:
+
+   - **Name**: Choose a name for your service
+   - **Environment**: Python
+   - **Build Command**: `pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate`
+   - **Start Command**: `gunicorn django_api.wsgi`
+
+5. Add the following environment variables:
+   - `SECRET_KEY`: Generate a secure random key
+   - `DEBUG`: Set to False for production
+   - `ALLOWED_HOSTS`: Include your Render domain, e.g., `your-app.onrender.com`
+   - `CORS_ALLOWED_ORIGINS`: URL of your frontend application
+   - `DATABASE_URL`: Automatically set by Render if you create a PostgreSQL database
+6. Create a PostgreSQL database in Render and link it to your web service.
+
+### Frontend Deployment to Render
+
+1. In your frontend directory, create a `vite.config.js` file that includes proper configuration for production:
+
+   ```js
+   export default {
+     build: {
+       outDir: "dist",
+     },
+     // Set the API URL to your deployed backend
+     define: {
+       "process.env.VITE_API_URL": JSON.stringify(
+         "https://your-backend.onrender.com"
+       ),
+     },
+   };
+   ```
+
+2. Create a new Static Site on Render.
+
+3. Connect your GitHub repository.
+
+4. Configure with the following settings:
+
+   - **Build Command**: `cd frontend && npm install && npm run build`
+   - **Publish Directory**: `frontend/dist`
+
+5. Under Environment settings, add any required environment variables.
 
 ## Development Notes
 
