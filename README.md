@@ -1,158 +1,154 @@
-# Django Vue Authentication Backend
+# Django-Vue Blog Application
 
-This project implements a Django-based authentication backend and blog API for a Vue.js frontend application.
+A full-stack blog application with a Django REST API backend and Vue.js frontend. Features include user authentication, blog post management, and comments.
 
-## API Endpoints
+## Features
 
-### Authentication
+- User authentication (register, login, logout)
+- Blog post creation, editing, and deletion
+- Custom user model with enhanced profile details
+- Token-based authentication
+- Responsive design using Tailwind CSS
 
-- **Register a new user**
+## Project Structure
 
-  - URL: `/api/auth/register/`
-  - Method: `POST`
-  - Request Body:
-    ```json
-    {
-      "email": "user@example.com",
-      "username": "username",
-      "password": "password123"
-    }
-    ```
-  - Response: User data with token
-
-- **Login**
-
-  - URL: `/api/auth/login/`
-  - Method: `POST`
-  - Request Body:
-    ```json
-    {
-      "email": "user@example.com",
-      "password": "password123"
-    }
-    ```
-  - Response: Authentication token with user data
-
-- **Logout**
-
-  - URL: `/api/auth/logout/`
-  - Method: `POST`
-  - Headers: `Authorization: Token <token>`
-  - Response: 204 No Content
-
-- **Get User Profile**
-  - URL: `/api/auth/profile/`
-  - Method: `GET`
-  - Headers: `Authorization: Token <token>`
-  - Response: User data
-
-### Blog API
-
-- **Categories**
-
-  - List Categories: `GET /api/blog/categories/`
-  - Create Category (staff only): `POST /api/blog/categories/`
-  - Get Category Detail: `GET /api/blog/categories/{slug}/`
-  - Update Category (staff only): `PUT/PATCH /api/blog/categories/{slug}/`
-  - Delete Category (staff only): `DELETE /api/blog/categories/{slug}/`
-
-- **Posts**
-
-  - List Posts: `GET /api/blog/posts/`
-  - Create Post (authenticated users): `POST /api/blog/posts/`
-  - Get Post Detail: `GET /api/blog/posts/{id}/`
-  - Update Post (author or staff): `PUT/PATCH /api/blog/posts/{id}/`
-  - Delete Post (author or staff): `DELETE /api/blog/posts/{id}/`
-
-- **Comments**
-  - List Comments: `GET /api/blog/comments/`
-  - Create Comment (authenticated users): `POST /api/blog/comments/`
-  - Get Comment Detail: `GET /api/blog/comments/{id}/`
-  - Update Comment (author or staff): `PUT/PATCH /api/blog/comments/{id}/`
-  - Delete Comment (author or staff): `DELETE /api/blog/comments/{id}/`
-
-## Test with Curl
-
-### Authentication
-
-#### Register a User
-
-```bash
-curl -X POST -H "Content-Type: application/json" -d '{"email": "test@example.com", "username": "testuser", "password": "testpass123"}' http://localhost:8000/api/auth/register/
-```
-
-#### Login
-
-```bash
-curl -X POST -H "Content-Type: application/json" -d '{"email": "test@example.com", "password": "testpass123"}' http://localhost:8000/api/auth/login/
-```
-
-#### Logout (replace TOKEN with your token)
-
-```bash
-curl -X POST -H "Authorization: Token TOKEN" http://localhost:8000/api/auth/logout/
-```
-
-#### Get Profile
-
-```bash
-curl -H "Authorization: Token TOKEN" http://localhost:8000/api/auth/profile/
-```
-
-### Blog API
-
-#### Create a Category (staff only)
-
-```bash
-curl -X POST -H "Content-Type: application/json" -H "Authorization: Token TOKEN" -d '{"name": "Technology", "slug": "technology"}' http://localhost:8000/api/blog/categories/
-```
-
-#### List Categories
-
-```bash
-curl http://localhost:8000/api/blog/categories/
-```
-
-#### Create a Post
-
-```bash
-curl -X POST -H "Content-Type: application/json" -H "Authorization: Token TOKEN" -d '{"title": "My First Post", "slug": "my-first-post", "content": "This is the content of my first post.", "status": "published", "category_ids": [1]}' http://localhost:8000/api/blog/posts/
-```
-
-#### List Posts
-
-```bash
-curl http://localhost:8000/api/blog/posts/
-```
-
-#### Add a Comment
-
-```bash
-curl -X POST -H "Content-Type: application/json" -H "Authorization: Token TOKEN" -d '{"post": 1, "content": "Great post!"}' http://localhost:8000/api/blog/comments/
-```
+- `django_api/` - Django project settings
+- `authentication/` - Custom user model and authentication endpoints
+- `blog_configuration/` - Blog models and API endpoints
+- `frontend/` - Vue.js application
 
 ## Setup Instructions
 
-1. Install dependencies:
+### Backend (Django)
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/yourusername/django-vue.git
+   cd django-vue
+   ```
+
+2. Create and activate a virtual environment:
+
+   ```bash
+   # For Windows
+   python -m venv venv
+   venv\Scripts\activate
+
+   # For macOS/Linux
+   python -m venv venv
+   source venv/bin/activate
+   ```
+
+3. Install backend dependencies:
 
    ```bash
    pip install django djangorestframework django-cors-headers whitenoise django-filter
    ```
 
-2. Run migrations:
+4. Apply database migrations:
 
    ```bash
    python manage.py makemigrations
    python manage.py migrate
    ```
 
-3. Create a superuser:
+5. Create a superuser (admin account):
 
    ```bash
    python manage.py createsuperuser
    ```
 
-4. Run the development server:
+6. Run the Django development server:
+
    ```bash
    python manage.py runserver
    ```
+
+   The backend API will be available at `http://localhost:8000/`
+
+### Frontend (Vue.js)
+
+1. Navigate to the frontend directory:
+
+   ```bash
+   cd frontend
+   ```
+
+2. Install frontend dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Run the Vue.js development server:
+
+   ```bash
+   npm run dev
+   ```
+
+   The frontend application will be available at `http://localhost:5173/`
+
+## Using the Application
+
+1. Open your browser and navigate to `http://localhost:5173/`
+2. Register a new account or log in with existing credentials
+3. Create, view, edit, and delete blog posts
+4. Log out when finished
+
+## API Endpoints
+
+### Authentication
+
+- **Register**: `POST /api/auth/register/`
+
+  ```json
+  {
+    "username": "username",
+    "email": "user@example.com",
+    "password": "password123",
+    "password2": "password123",
+    "first_name": "First",
+    "last_name": "Last"
+  }
+  ```
+
+- **Login**: `POST /api/auth/login/`
+
+  ```json
+  {
+    "username": "username",
+    "password": "password123"
+  }
+  ```
+
+  Note: You can use either username or email for the username field.
+
+- **Logout**: `POST /api/auth/logout/` (requires authentication)
+
+- **User Profile**: `GET /api/auth/profile/` (requires authentication)
+
+### Blog
+
+- **List Posts**: `GET /api/blog/posts/`
+- **Create Post**: `POST /api/blog/posts/` (requires authentication)
+- **View Post**: `GET /api/blog/posts/{id}/`
+- **Update Post**: `PUT/PATCH /api/blog/posts/{id}/` (author or admin only)
+- **Delete Post**: `DELETE /api/blog/posts/{id}/` (author or admin only)
+
+## Admin Interface
+
+Access the Django admin interface at `http://localhost:8000/admin/` using your superuser credentials.
+
+## Development Notes
+
+- The frontend uses Axios for API requests
+- Authentication is managed using tokens
+- Tailwind CSS is used for styling
+- Pinia is used for state management
+
+## Troubleshooting
+
+- If you encounter CORS issues, ensure the Django CORS settings are properly configured
+- For authentication issues, check that tokens are being properly stored and included in requests
+- If the frontend cannot connect to the backend, ensure both servers are running and the API URLs are correct
